@@ -1,3 +1,4 @@
+// src/components/NodeWorkflow.tsx
 import React, { useState } from 'react';
 import ReactFlow, {
   MiniMap,
@@ -11,72 +12,62 @@ import ReactFlow, {
   Connection,
   Handle,
   Position,
-  ProOptions,  // Import ProOptions for removing watermark
 } from 'react-flow-renderer';
 import { Plus } from 'lucide-react';
 
-// Example statuses and colors
-const statuses = {
-  queued: 'bg-yellow-400',
-  running: 'bg-blue-400',
-  finished: 'bg-green-400',
-  error: 'bg-red-400',
-};
-
-interface GlassNodeData {
+interface DiffusionNodeData {
   label: string;
-  status: keyof typeof statuses;
+  type: string;
+  params?: any;
 }
 
-// Initial node and edge data
-const initialNodes: Node<GlassNodeData>[] = [
-  { id: '1', data: { label: 'Input', status: 'queued' }, position: { x: 50, y: 50 }, type: 'glassNode' },
-  { id: '2', data: { label: 'Process', status: 'running' }, position: { x: 200, y: 50 }, type: 'glassNode' },
-  { id: '3', data: { label: 'Output', status: 'finished' }, position: { x: 350, y: 50 }, type: 'glassNode' },
-];
-
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2', type: 'default', animated: true },
-  { id: 'e2-3', source: '2', target: '3', type: 'default', animated: true },
-];
-
-// Custom node component with longer shape and status
-const GlassNode = ({ data }: { data: GlassNodeData }) => {
-  return (
-    <div className="w-64 p-4 bg-white bg-opacity-5 backdrop-blur-lg rounded-lg shadow-lg border border-white border-opacity-10 text-white">
-      <Handle type="target" position={Position.Left} className="bg-blue-500 w-2 h-2" /> {/* Left handle */}
-      <div className="flex items-center space-x-2">
-        {/* Status indicator dot */}
-        <span className={`w-3 h-3 rounded-full ${statuses[data.status]}`}></span>
-        {/* Main label */}
-        <div className="text-lg font-semibold">{data.label}</div>
-      </div>
-      {/* Smaller status text */}
-      <div className="text-sm text-gray-300 mt-1">{data.status.charAt(0).toUpperCase() + data.status.slice(1)}</div>
-      <Handle type="source" position={Position.Right} className="bg-blue-500 w-2 h-2" /> {/* Right handle */}
-    </div>
-  );
-};
-
-// Node types definition
 const nodeTypes = {
-  glassNode: GlassNode,
+  diffusionNode: ({ data }: { data: DiffusionNodeData }) => (
+    <div className="w-64 p-4 bg-gray-800 rounded shadow text-white">
+      <Handle type="target" position={Position.Top} className="w-2 h-2 bg-blue-500" />
+      <div className="text-lg font-bold">{data.label}</div>
+      <div className="text-sm italic">{data.type}</div>
+      {/* Display parameters */}
+      {data.params && (
+        <div className="mt-2">
+          {Object.keys(data.params).map((key) => (
+            <div key={key} className="text-xs">
+              {key}: {data.params[key]}
+            </div>
+          ))}
+        </div>
+      )}
+      <Handle type="source" position={Position.Bottom} className="w-2 h-2 bg-blue-500" />
+    </div>
+  ),
 };
 
+const initialNodes: Node<DiffusionNodeData>[] = [
+  {
+    id: '1',
+    type: 'diffusionNode',
+    data: { label: 'Input Image', type: 'Input' },
+    position: { x: 50, y: 50 },
+  },
+];
+
+const initialEdges: Edge[] = [];
 
 const NodeWorkflow: React.FC = () => {
-  const [nodes, setNodes] = useState<Node<GlassNodeData>[]>(initialNodes);
+  const [nodes, setNodes] = useState<Node<DiffusionNodeData>[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
-  // Function to add new nodes
   const addNode = () => {
-    const newNode: Node<GlassNodeData> = {
+    const nodeType = prompt('Enter node type (e.g., Diffusion, ControlNet, Output):');
+    if (!nodeType) return;
+
+    const newNode: Node<DiffusionNodeData> = {
       id: (nodes.length + 1).toString(),
-      data: { label: 'Process', status: 'queued' },  // Ensure status matches the keyof typeof statuses
+      type: 'diffusionNode',
+      data: { label: `${nodeType} Node`, type: nodeType },
       position: { x: Math.random() * 300 + 50, y: Math.random() * 100 + 50 },
-      type: 'glassNode',
     };
-    setNodes((nds) => [...nds, newNode]);  // Properly set the node type
+    setNodes((nds) => [...nds, newNode]);
   };
 
   // Handlers for node and edge changes
@@ -89,7 +80,7 @@ const NodeWorkflow: React.FC = () => {
   };
 
   const onConnect = (params: Connection | Edge) => {
-    setEdges((eds) => addEdge(params, eds));
+    setEdges((eds) => addEdge({ ...params, animated: true }, eds));
   };
 
   return (
@@ -110,14 +101,13 @@ const NodeWorkflow: React.FC = () => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        nodeTypes={nodeTypes}  // Use the custom node types
+        nodeTypes={nodeTypes}
         defaultEdgeOptions={{ animated: true }}
       >
-        {/* Dark styled MiniMap */}
         <MiniMap
-          nodeColor={() => '#ffffff'} // White nodes on the minimap
+          nodeColor={() => '#ffffff'}
           style={{
-            backgroundColor: '#1a202c', // Dark background for the minimap
+            backgroundColor: '#1a202c',
           }}
           nodeStrokeWidth={2}
         />
