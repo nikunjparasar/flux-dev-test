@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Layers,
   Image as LucideImage,
-  Sliders,
   Share,
   Save,
   Folder,
@@ -11,6 +10,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Edit3,
+  Crop,
+  RotateCw,
+  Type,
+  Brush,
+  Undo,
+  Redo,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 
 import NodeWorkflow from './NodeWorkflow';
@@ -21,8 +28,13 @@ interface GlassmorphicPanelProps {
   className?: string;
 }
 
-const GlassmorphicPanel: React.FC<GlassmorphicPanelProps> = ({ children, className = '' }) => (
-  <div className={`bg-white bg-opacity-5 backdrop-blur-lg rounded-lg shadow-lg ${className}`}>
+const GlassmorphicPanel: React.FC<GlassmorphicPanelProps> = ({
+  children,
+  className = '',
+}) => (
+  <div
+    className={`bg-white bg-opacity-5 backdrop-blur-lg rounded-lg shadow-lg ${className}`}
+  >
     {children}
   </div>
 );
@@ -33,7 +45,11 @@ interface IconButtonProps {
   onClick: () => void;
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ icon: Icon, label, onClick }) => (
+const IconButton: React.FC<IconButtonProps> = ({
+  icon: Icon,
+  label,
+  onClick,
+}) => (
   <button
     onClick={onClick}
     className="flex flex-col items-center justify-center p-2 text-white hover:bg-white hover:bg-opacity-10 rounded transition-colors"
@@ -53,7 +69,9 @@ const Sidebar: React.FC<SidebarProps> = ({ children, isLeft = true }) => {
   return (
     <div className={`h-full flex ${isLeft ? 'mr-2' : 'ml-2'}`}>
       <GlassmorphicPanel
-        className={`h-full ${isOpen ? 'w-64' : 'w-0'} overflow-hidden transition-all duration-300 flex flex-col`}
+        className={`h-full ${
+          isOpen ? 'w-64' : 'w-0'
+        } overflow-hidden transition-all duration-300 flex flex-col`}
       >
         {children}
       </GlassmorphicPanel>
@@ -61,7 +79,17 @@ const Sidebar: React.FC<SidebarProps> = ({ children, isLeft = true }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="bg-white bg-opacity-5 hover:bg-opacity-10 text-white p-2 self-center rounded-full shadow"
       >
-        {isOpen ? (isLeft ? <ChevronLeft /> : <ChevronRight />) : isLeft ? <ChevronRight /> : <ChevronLeft />}
+        {isOpen ? (
+          isLeft ? (
+            <ChevronLeft />
+          ) : (
+            <ChevronRight />
+          )
+        ) : isLeft ? (
+          <ChevronRight />
+        ) : (
+          <ChevronLeft />
+        )}
       </button>
     </div>
   );
@@ -72,7 +100,10 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -96,6 +127,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               {/* Add more languages */}
             </select>
           </div>
+          <div>
+            <label className="block mb-1">Shortcuts</label>
+            <button
+              className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+              onClick={() => alert('Shortcut settings coming soon!')}
+            >
+              Edit Shortcuts
+            </button>
+          </div>
         </div>
         <button
           onClick={onClose}
@@ -111,7 +151,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 const AIPhotoEditor: React.FC = () => {
   const [showNodeWorkflow, setShowNodeWorkflow] = useState(false);
   const [activeTab, setActiveTab] = useState<'tools' | 'ai'>('tools');
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(
+    null
+  );
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [showPhotopea, setShowPhotopea] = useState(false);
 
@@ -191,9 +233,15 @@ const AIPhotoEditor: React.FC = () => {
             <IconButton icon={Folder} label="Open" onClick={handleOpen} />
             <IconButton icon={Save} label="Save" onClick={handleSave} />
             <IconButton icon={Share} label="Share" onClick={handleShare} />
+            <IconButton icon={Undo} label="Undo" onClick={() => alert('Undo action')} />
+            <IconButton icon={Redo} label="Redo" onClick={() => alert('Redo action')} />
           </div>
           <div className="flex space-x-2">
-            <IconButton icon={Settings} label="Settings" onClick={() => setSettingsModalOpen(true)} />
+            <IconButton
+              icon={Settings}
+              label="Settings"
+              onClick={() => setSettingsModalOpen(true)}
+            />
           </div>
         </div>
 
@@ -203,13 +251,17 @@ const AIPhotoEditor: React.FC = () => {
           <Sidebar>
             <div className="flex border-b border-white border-opacity-10">
               <button
-                className={`flex-1 p-2 ${activeTab === 'tools' ? 'bg-white bg-opacity-10' : ''}`}
+                className={`flex-1 p-2 ${
+                  activeTab === 'tools' ? 'bg-white bg-opacity-10' : ''
+                }`}
                 onClick={() => setActiveTab('tools')}
               >
                 Tools
               </button>
               <button
-                className={`flex-1 p-2 ${activeTab === 'ai' ? 'bg-white bg-opacity-10' : ''}`}
+                className={`flex-1 p-2 ${
+                  activeTab === 'ai' ? 'bg-white bg-opacity-10' : ''
+                }`}
                 onClick={() => setActiveTab('ai')}
               >
                 AI
@@ -229,10 +281,32 @@ const AIPhotoEditor: React.FC = () => {
                         Advanced Editor
                       </button>
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
-                        onClick={() => alert('Adjust tool selected')}
+                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        onClick={() => alert('Crop tool selected')}
                       >
-                        Adjust
+                        <Crop className="w-4 h-4 mr-2" />
+                        Crop
+                      </button>
+                      <button
+                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        onClick={() => alert('Rotate tool selected')}
+                      >
+                        <RotateCw className="w-4 h-4 mr-2" />
+                        Rotate
+                      </button>
+                      <button
+                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        onClick={() => alert('Add Text tool selected')}
+                      >
+                        <Type className="w-4 h-4 mr-2" />
+                        Add Text
+                      </button>
+                      <button
+                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        onClick={() => alert('Brush tool selected')}
+                      >
+                        <Brush className="w-4 h-4 mr-2" />
+                        Brush
                       </button>
                     </div>
                   </div>
