@@ -33,7 +33,7 @@ const GlassmorphicPanel: React.FC<GlassmorphicPanelProps> = ({
   className = '',
 }) => (
   <div
-    className={`bg-white bg-opacity-5 backdrop-blur-lg rounded-lg shadow-lg ${className}`}
+    className={`bg-gradient-to-r from-gray-700 via-gray-900 to-black bg-opacity-30 backdrop-blur-md rounded-lg shadow-2xl ${className}`}
   >
     {children}
   </div>
@@ -52,10 +52,10 @@ const IconButton: React.FC<IconButtonProps> = ({
 }) => (
   <button
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-2 text-white hover:bg-white hover:bg-opacity-10 rounded transition-colors"
+    className="flex flex-col items-center justify-center p-3 text-white hover:bg-blue-600 hover:bg-opacity-20 rounded transition-colors"
   >
-    <Icon className="w-5 h-5" />
-    <span className="text-xs mt-1">{label}</span>
+    <Icon className="w-6 h-6" />
+    <span className="text-xs mt-1 font-medium tracking-wide">{label}</span>
   </button>
 );
 
@@ -67,17 +67,17 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ children, isLeft = true }) => {
   const [isOpen, setIsOpen] = useState(true);
   return (
-    <div className={`h-full flex ${isLeft ? 'mr-2' : 'ml-2'}`}>
+    <div className={`h-full flex ${isLeft ? 'mr-4' : 'ml-4'}`}>
       <GlassmorphicPanel
         className={`h-full ${
-          isOpen ? 'w-64' : 'w-0'
+          isOpen ? 'w-72' : 'w-0'
         } overflow-hidden transition-all duration-300 flex flex-col`}
       >
         {children}
       </GlassmorphicPanel>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-white bg-opacity-5 hover:bg-opacity-10 text-white p-2 self-center rounded-full shadow"
+        className="bg-blue-500 bg-opacity-20 hover:bg-opacity-40 text-white p-3 self-center rounded-full shadow-lg"
       >
         {isOpen ? (
           isLeft ? (
@@ -107,30 +107,30 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 p-6 rounded-lg text-white w-96">
-        <h2 className="text-xl font-bold mb-4">Settings</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+      <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-black p-8 rounded-lg text-white w-96 shadow-2xl">
+        <h2 className="text-2xl font-bold mb-6">Settings</h2>
         {/* Settings content */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <label className="block mb-1">Theme</label>
-            <select className="w-full p-2 bg-gray-700 rounded">
+            <label className="block mb-2 font-semibold">Theme</label>
+            <select className="w-full p-3 bg-gray-800 rounded focus:outline-none">
               <option>Dark</option>
               <option>Light</option>
             </select>
           </div>
           <div>
-            <label className="block mb-1">Language</label>
-            <select className="w-full p-2 bg-gray-700 rounded">
+            <label className="block mb-2 font-semibold">Language</label>
+            <select className="w-full p-3 bg-gray-800 rounded focus:outline-none">
               <option>English</option>
               <option>Spanish</option>
               {/* Add more languages */}
             </select>
           </div>
           <div>
-            <label className="block mb-1">Shortcuts</label>
+            <label className="block mb-2 font-semibold">Shortcuts</label>
             <button
-              className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+              className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
               onClick={() => alert('Shortcut settings coming soon!')}
             >
               Edit Shortcuts
@@ -139,7 +139,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
         <button
           onClick={onClose}
-          className="mt-6 px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+          className="mt-8 px-5 py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
         >
           Close
         </button>
@@ -225,18 +225,18 @@ const AIPhotoEditor: React.FC = () => {
   }, [uploadedImage, exposure, contrast, saturation]);
 
   return (
-    <div className="w-full h-screen bg-gradient-to-br from-gray-800 via-black to-gray-900 text-white overflow-hidden flex flex-col p-4">
+    <div className="w-full h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white overflow-hidden flex flex-col p-6">
       <GlassmorphicPanel className="flex-1 flex flex-col">
         {/* Top bar */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-white border-opacity-10">
-          <div className="flex space-x-2">
+        <div className="h-16 flex items-center justify-between px-6 border-b border-white border-opacity-10">
+          <div className="flex space-x-4">
             <IconButton icon={Folder} label="Open" onClick={handleOpen} />
             <IconButton icon={Save} label="Save" onClick={handleSave} />
             <IconButton icon={Share} label="Share" onClick={handleShare} />
             <IconButton icon={Undo} label="Undo" onClick={() => alert('Undo action')} />
             <IconButton icon={Redo} label="Redo" onClick={() => alert('Redo action')} />
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <IconButton
               icon={Settings}
               label="Settings"
@@ -251,73 +251,73 @@ const AIPhotoEditor: React.FC = () => {
           <Sidebar>
             <div className="flex border-b border-white border-opacity-10">
               <button
-                className={`flex-1 p-2 ${
-                  activeTab === 'tools' ? 'bg-white bg-opacity-10' : ''
+                className={`flex-1 p-3 font-semibold tracking-wide text-sm ${
+                  activeTab === 'tools' ? 'bg-blue-600 bg-opacity-30' : ''
                 }`}
                 onClick={() => setActiveTab('tools')}
               >
                 Tools
               </button>
               <button
-                className={`flex-1 p-2 ${
-                  activeTab === 'ai' ? 'bg-white bg-opacity-10' : ''
+                className={`flex-1 p-3 font-semibold tracking-wide text-sm ${
+                  activeTab === 'ai' ? 'bg-blue-600 bg-opacity-30' : ''
                 }`}
                 onClick={() => setActiveTab('ai')}
               >
                 AI
               </button>
             </div>
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto flex-1 p-4">
               {activeTab === 'tools' && (
-                <div className="p-4 space-y-4">
+                <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Tools</h3>
-                    <div className="space-y-2">
+                    <h3 className="text-lg font-semibold mb-3">Tools</h3>
+                    <div className="space-y-3">
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors flex items-center justify-center focus:outline-none"
                         onClick={() => setShowPhotopea(true)}
                       >
-                        <Edit3 className="w-4 h-4 mr-2" />
+                        <Edit3 className="w-5 h-5 mr-3" />
                         Advanced Editor
                       </button>
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors flex items-center justify-center focus:outline-none"
                         onClick={() => alert('Crop tool selected')}
                       >
-                        <Crop className="w-4 h-4 mr-2" />
+                        <Crop className="w-5 h-5 mr-3" />
                         Crop
                       </button>
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors flex items-center justify-center focus:outline-none"
                         onClick={() => alert('Rotate tool selected')}
                       >
-                        <RotateCw className="w-4 h-4 mr-2" />
+                        <RotateCw className="w-5 h-5 mr-3" />
                         Rotate
                       </button>
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors flex items-center justify-center focus:outline-none"
                         onClick={() => alert('Add Text tool selected')}
                       >
-                        <Type className="w-4 h-4 mr-2" />
+                        <Type className="w-5 h-5 mr-3" />
                         Add Text
                       </button>
                       <button
-                        className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors flex items-center justify-center"
+                        className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors flex items-center justify-center focus:outline-none"
                         onClick={() => alert('Brush tool selected')}
                       >
-                        <Brush className="w-4 h-4 mr-2" />
+                        <Brush className="w-5 h-5 mr-3" />
                         Brush
                       </button>
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Color Grading</h3>
-                    <div className="space-y-4">
+                    <h3 className="text-lg font-semibold mb-3">Color Grading</h3>
+                    <div className="space-y-6">
                       <div>
-                        <label className="block text-sm mb-1">Exposure</label>
+                        <label className="block text-sm font-semibold mb-2">Exposure</label>
                         <input
                           type="range"
-                          className="w-full"
+                          className="w-full accent-blue-600"
                           min="-1"
                           max="1"
                           step="0.01"
@@ -326,10 +326,10 @@ const AIPhotoEditor: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm mb-1">Contrast</label>
+                        <label className="block text-sm font-semibold mb-2">Contrast</label>
                         <input
                           type="range"
-                          className="w-full"
+                          className="w-full accent-blue-600"
                           min="0"
                           max="3"
                           step="0.01"
@@ -338,10 +338,10 @@ const AIPhotoEditor: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm mb-1">Saturation</label>
+                        <label className="block text-sm font-semibold mb-2">Saturation</label>
                         <input
                           type="range"
-                          className="w-full"
+                          className="w-full accent-blue-600"
                           min="0"
                           max="3"
                           step="0.01"
@@ -354,32 +354,32 @@ const AIPhotoEditor: React.FC = () => {
                 </div>
               )}
               {activeTab === 'ai' && (
-                <div className="p-4 space-y-4">
-                  <h3 className="text-lg font-semibold mb-2">AI Features</h3>
-                  <div className="space-y-2">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold mb-3">AI Features</h3>
+                  <div className="space-y-3">
                     <button
-                      className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+                      className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
                       onClick={() => alert('Background removed (simulated)!')}
                     >
                       Remove Background
                     </button>
                     <button
-                      className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+                      className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
                       onClick={() => alert('Details enhanced (simulated)!')}
                     >
                       Enhance Details
                     </button>
                     <button
-                      className="w-full py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+                      className="w-full py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
                       onClick={() => alert('Style transferred (simulated)!')}
                     >
                       Style Transfer
                     </button>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">ControlNets</h3>
-                  <div className="space-y-2">
+                  <h3 className="text-lg font-semibold mb-3">ControlNets</h3>
+                  <div className="space-y-3">
                     <button
-                      className="w-full py-2 bg-green-500 rounded hover:bg-green-600 transition-colors"
+                      className="w-full py-3 bg-green-600 rounded hover:bg-green-700 transition-colors focus:outline-none"
                       onClick={handleAddControlNet}
                     >
                       Add ControlNet
@@ -388,24 +388,24 @@ const AIPhotoEditor: React.FC = () => {
                     {controlNets.map((name, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-gray-700 p-2 rounded"
+                        className="flex items-center justify-between bg-gray-800 p-3 rounded"
                       >
                         <span>{name}</span>
                         <button
                           onClick={() =>
                             setControlNets(controlNets.filter((_, i) => i !== index))
                           }
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 focus:outline-none"
                         >
                           Remove
                         </button>
                       </div>
                     ))}
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">LoRA Fine-tuning</h3>
-                  <div className="space-y-2">
+                  <h3 className="text-lg font-semibold mb-3">LoRA Fine-tuning</h3>
+                  <div className="space-y-3">
                     <button
-                      className="w-full py-2 bg-purple-500 rounded hover:bg-purple-600 transition-colors"
+                      className="w-full py-3 bg-purple-600 rounded hover:bg-purple-700 transition-colors focus:outline-none"
                       onClick={handleFineTuneLoRA}
                     >
                       Fine-tune LoRA
@@ -414,12 +414,12 @@ const AIPhotoEditor: React.FC = () => {
                     {loRAs.map((name, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-gray-700 p-2 rounded"
+                        className="flex items-center justify-between bg-gray-800 p-3 rounded"
                       >
                         <span>{name}</span>
                         <button
                           onClick={() => setLoRAs(loRAs.filter((_, i) => i !== index))}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 focus:outline-none"
                         >
                           Remove
                         </button>
@@ -432,7 +432,7 @@ const AIPhotoEditor: React.FC = () => {
           </Sidebar>
 
           {/* Main editing area */}
-          <div className="flex-1 m-2 bg-black bg-opacity-30 backdrop-blur-sm rounded-lg shadow-2xl flex items-center justify-center relative">
+          <div className="flex-1 m-4 bg-black bg-opacity-40 backdrop-blur-lg rounded-xl shadow-2xl flex items-center justify-center relative">
             {showNodeWorkflow ? (
               <NodeWorkflow />
             ) : showPhotopea ? (
@@ -449,7 +449,7 @@ const AIPhotoEditor: React.FC = () => {
             ) : (
               <button
                 onClick={handleOpen}
-                className="flex flex-col items-center text-white opacity-50 hover:opacity-100 transition-opacity"
+                className="flex flex-col items-center text-white opacity-50 hover:opacity-100 transition-opacity focus:outline-none"
               >
                 <LucideImage className="w-32 h-32" />
                 <span>Click to Upload</span>
@@ -476,26 +476,26 @@ const AIPhotoEditor: React.FC = () => {
 
           {/* Right sidebar - Layers */}
           <Sidebar isLeft={false}>
-            <h2 className="text-xl font-bold p-4 border-b border-white border-opacity-10">Layers</h2>
-            <div className="space-y-2 p-4">
-              <div className="flex items-center space-x-2">
-                <Layers className="w-4 h-4" />
+            <h2 className="text-xl font-bold p-5 border-b border-white border-opacity-10">Layers</h2>
+            <div className="space-y-4 p-5">
+              <div className="flex items-center space-x-3">
+                <Layers className="w-5 h-5" />
                 <span>Background</span>
               </div>
               {/* Additional layers */}
-              <div className="flex items-center space-x-2">
-                <Layers className="w-4 h-4" />
+              <div className="flex items-center space-x-3">
+                <Layers className="w-5 h-5" />
                 <span>Adjustments</span>
               </div>
               {controlNets.map((name, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <Layers className="w-4 h-4" />
+                <div key={index} className="flex items-center space-x-3">
+                  <Layers className="w-5 h-5" />
                   <span>{name}</span>
                 </div>
               ))}
               {loRAs.map((name, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <Layers className="w-4 h-4" />
+                <div key={index} className="flex items-center space-x-3">
+                  <Layers className="w-5 h-5" />
                   <span>{name}</span>
                 </div>
               ))}
@@ -504,13 +504,13 @@ const AIPhotoEditor: React.FC = () => {
         </div>
 
         {/* Bottom bar - Timeline and Node Workflow */}
-        <div className="h-16 flex items-center justify-between px-4 border-t border-white border-opacity-10">
+        <div className="h-16 flex items-center justify-between px-6 border-t border-white border-opacity-10">
           <div className="flex-1 h-2 bg-white bg-opacity-20 rounded-full mx-4">
             <div className="w-1/3 h-full bg-blue-500 rounded-full"></div>
           </div>
           <button
             onClick={() => setShowNodeWorkflow(!showNodeWorkflow)}
-            className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors"
+            className="px-5 py-3 bg-blue-600 rounded hover:bg-blue-700 transition-colors focus:outline-none"
           >
             {showNodeWorkflow ? 'Hide' : 'Show'} Node Workflow
           </button>
